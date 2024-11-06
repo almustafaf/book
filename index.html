@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل ملزمة الأحياء</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            text-align: center;
+            direction: rtl;
+        }
+        h1 {
+            font-size: 24px;
+            color: #00796b;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #00796b;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004d40;
+        }
+        /* Notification style */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+        .notification.success {
+            background-color: #4CAF50;
+        }
+        .notification.error {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>اهلا بكم في تسجيل ملزمة الأحياء للصف الثالث متوسط</h1>
+    <div class="form-container">
+        <label for="fullname">ادخل اسمك الثلاثي:</label>
+        <input type="text" id="fullname" placeholder="اكتب اسمك هنا">
+        <button onclick="sendData()">إرسال</button>
+    </div>
+
+    <!-- Notification Elements -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+
+            // إخفاء الإشعار بعد 3 ثوانٍ
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function sendData() {
+            const name = document.getElementById('fullname').value;
+
+            if (name === "") {
+                showNotification("يرجى إدخال الاسم الثلاثي", "error");
+                return;
+            }
+
+            const botToken = "8057736857:AAGkqgWNe-VMJUkyfZff5QMY6ymB6phydLU"; // ضع هنا توكن البوت الخاص بك
+            const chatId = "8164533475"; // ضع هنا معرف المحادثة (Chat ID) الخاص بك
+
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=اسم الطالب الثلاثي: ${name}`;
+
+            fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        showNotification("تم إرسال المعلومات بنجاح!", "success");
+                    } else {
+                        showNotification("حدث خطأ أثناء إرسال المعلومات.", "error");
+                    }
+                })
+                .catch(error => {
+                    showNotification("حدث خطأ في الاتصال بالبوت.", "error");
+                });
+        }
+    </script>
+</body>
+</html>
